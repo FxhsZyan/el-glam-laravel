@@ -10,8 +10,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach ([['Canduman', 'canduman'], ['Basak', 'basak'], ['Cebu City', 'cebu-city']] as [$name, $slug]) {
-            Branch::firstOrCreate(['slug' => $slug], ['name' => $name]);
+        // "Basak" came from the old demo guide; the real branch is Pajac
+        Branch::where('slug', 'basak')->update(['name' => 'Pajac', 'slug' => 'pajac']);
+
+        $branches = [
+            ['Canduman', 'canduman', '2/F Paradise Bldg., H. Abellana St., Canduman, Mandaue City'],
+            ['Pajac', 'pajac', 'Helenville Apartment, Bankal Road, Barangay Pajac, Lapu-Lapu City'],
+            ['Cebu City', 'cebu-city', '8V6R+8VM, Don Gil Street, Cebu City'],
+            ['Pusok', 'pusok', null], // address still to be confirmed
+        ];
+
+        foreach ($branches as [$name, $slug, $address]) {
+            Branch::updateOrCreate(['slug' => $slug], ['name' => $name, 'address' => $address]);
         }
 
         User::updateOrCreate(['email' => 'admin@elglam.test'], [
